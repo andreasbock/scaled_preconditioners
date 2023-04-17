@@ -8,8 +8,7 @@ preconditioners defined in this package.
 
 ## Build Status
 
-[![Tests (Python 3.9)](https://github.com/andreasbock/scaled_preconditioners/actions/workflows/tests.yml/badge.svg)](https://github.com/andreasbock/scaled_preconditioners/actions/workflows/tests.yml)
-[![Tests (Python 3.10)](https://github.com/andreasbock/scaled_preconditioners/actions/workflows/tests.yml/badge.svg)](https://github.com/andreasbock/scaled_preconditioners/actions/workflows/tests.yml)
+[![Tests](https://github.com/andreasbock/scaled_preconditioners/actions/workflows/tests.yml/badge.svg)](https://github.com/andreasbock/scaled_preconditioners/actions/workflows/tests.yml)
 
 ## Installation
 
