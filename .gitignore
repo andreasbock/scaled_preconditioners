@@ -1,0 +1,11 @@
+.coverage
+.mypy_cache/
+.nox/
+.python-version
+docs/_build/
+_pycache__/
+.pytest_cache
+dist
+.DS_Store
+__pycache__
+.idea
