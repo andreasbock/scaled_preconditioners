@@ -7,9 +7,8 @@ from scaled_preconditioners.approximation import approximate
 from tests.conftest import matrices
 
 
-@pytest.mark.parametrize("matrix", matrices)
-def test_approximate_truncated_svd(matrix, request):
-    X, rank = request.getfixturevalue(matrix)
+def test_approximate_truncated_svd(dense_matrix):
+    X, rank = dense_matrix
     Us, VT = approximate(X, algorithm="truncated_svd", rank_approx=rank)
     X_r = Us @ VT
     _check_error(X - X_r)

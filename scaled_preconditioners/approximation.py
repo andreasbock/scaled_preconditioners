@@ -1,6 +1,5 @@
 import functools
 import operator
-import warnings
 
 import scipy.linalg
 from scipy.linalg import cholesky
@@ -15,11 +14,33 @@ def approximate(
     X,
     algorithm: str,
     rank_approx: int,
-    n_oversamples: int = 10,
-    n_power_iter: int = 5,
+    n_oversamples: int = 6,
+    n_power_iter: int = 2,
     random_state=None,
 ):
+    """
+    Computes a low rank approximation of a matrix.
+
+    Args:
+        X: Original matrix.
+        algorithm: Can be either 'truncated_svd', 'randomized' or 'nystrom'.
+        rank_approx: rank of the approximation (must be less than rank(X)).
+        n_oversamples: Oversampling parameter.
+        n_power_iter: Number of power iterations used in range finding.
+        random_state: Seed.
+
+    Returns:
+        A low rank approximation of `X`.
+
+    Raises:
+        ValueError: If 'truncated_svd' is requested for a sparse matrix.
+        NotImplementedError: If `algorithm` is not recognised.
+    """
     if algorithm in "truncated_svd":
+        if scipy.sparse.issparse(X):
+            raise ValueError(
+                "Input matrix must be dense if you specify algorithm='truncated_svd'."
+            )
         svd = TruncatedSVD(
             n_components=rank_approx,
             algorithm="arpack",
@@ -27,11 +48,6 @@ def approximate(
             n_oversamples=n_oversamples,
             random_state=random_state,
         )
-        if scipy.sparse.issparse(X):
-            warnings.warn(
-                "Converted sparse matrix to dense since a truncated SVD was requested."
-            )
-            X = X.toarray()
         Us = svd.fit_transform(X)
         return Us, svd.components_
     elif algorithm == "randomized":

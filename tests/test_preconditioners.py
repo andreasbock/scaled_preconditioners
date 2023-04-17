@@ -41,9 +41,8 @@ def test_linear_operator_composition(dimension):
         assert np.allclose(r2, rl)
 
 
-@pytest.mark.parametrize("problem", problems)
-def test_preconditioner_truncated_svd(problem, psd_rank, request):
-    Q, B = request.getfixturevalue(problem)
+def test_preconditioner_truncated_svd(dense_problem, psd_rank):
+    Q, B = dense_problem
     S = Q @ Q.T + B
     pc = compute_preconditioner(Q, B, algorithm="truncated_svd", rank_approx=psd_rank)
     assert _action_inverts(S, pc)
@@ -65,7 +64,7 @@ def test_preconditioner_randomised_svd(
         n_power_iter=n_power_iterations,
         random_state=random_state,
     )
-    assert _action_inverts(S, pc, atol=1e-05)
+    assert _action_inverts(S, pc)
 
 
 @pytest.mark.parametrize("problem", problems)

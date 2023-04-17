@@ -37,23 +37,21 @@ def dense_matrix(dimension, psd_rank):
 @pytest.fixture(scope="module")
 def sparse_matrix(dense_matrix):
     matrix, rank = dense_matrix
-    return csr_matrix(matrix, dtype=np.float64), rank
+    return csr_matrix(matrix), rank
 
 
 @pytest.fixture(scope="module")
-def dense_problem(dimension, psd_rank, dense_matrix):
+def dense_problem(dimension, dense_matrix):
     Q = np.random.rand(dimension, dimension).astype(np.float64)
     B, _ = dense_matrix
     return Q, B
 
 
 @pytest.fixture(scope="module")
-def sparse_problem(dimension, psd_rank):
+def sparse_problem(dimension, sparse_matrix):
     Q = np.random.rand(dimension, dimension)
-    F = np.random.rand(dimension, psd_rank)
-    B = F @ F.T
-    Q = csr_matrix(Q, dtype=np.float64)
-    B = csr_matrix(B, dtype=np.float64)
+    Q = csr_matrix(Q)
+    B, _ = sparse_matrix
     return Q, B
 
 

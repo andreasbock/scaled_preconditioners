@@ -13,15 +13,17 @@ oversampling = 3
 power_iters = 1
 
 # Construct S = A + B
-F = csc_matrix(np.random.rand(dimension, psd_rank))  # same rank as we approximate
-B = F @ F.T
-Q = csc_matrix(np.random.rand(dimension, dimension))
+F_np = np.random.rand(dimension, psd_rank)
+B_np = F_np @ F_np.T
+B = csc_matrix(B_np)  # same rank as we approximate
+Q_np = np.random.rand(dimension, dimension)
+Q = csc_matrix(Q_np)
 S = Q @ Q.T + B
 
 
 # Construct S = A + B
 tsvd_pc = compute_preconditioner(
-    Q, B, algorithm="truncated_svd", rank_approx=rank_approx
+    Q_np, B_np, algorithm="truncated_svd", rank_approx=rank_approx
 )
 rsvd_pc = compute_preconditioner(
     Q,

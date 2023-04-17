@@ -19,7 +19,7 @@ def flake8(session):
     session.run("flake8", ".")
 
 
-@session(python=["3.10", "3.9"])
+@session(python="3.9")
 def tests(session):
     session.install("pytest", ".")
     session.run("pytest")
