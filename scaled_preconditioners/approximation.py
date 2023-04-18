@@ -36,7 +36,7 @@ def approximate(
         ValueError: If 'truncated_svd' is requested for a sparse matrix.
         NotImplementedError: If `algorithm` is not recognised.
     """
-    if algorithm in "truncated_svd":
+    if algorithm == "truncated_svd":
         if scipy.sparse.issparse(X):
             raise ValueError(
                 "Input matrix must be dense if you specify algorithm='truncated_svd'."

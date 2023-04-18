@@ -20,7 +20,7 @@ def compute_preconditioner(
     random_state: int = 0,
 ) -> LinearOperator:
     """
-    For a matrix S = A + B, this method computes the preconditioner:
+    For a Hermitian matrix S = A + B, this method computes the preconditioner:
 
         P = Q(I + X)Q^*,
 
@@ -73,7 +73,9 @@ def compute_preconditioner(
     else:
         inner = np.eye(factor.shape[0]) + prod
 
+    m = scipy.linalg.inv(factor @ inner @ factor.T)
+
     def action(vector):
-        return _solve_fn(factor @ inner @ factor.T, vector)
+        return m.dot(vector)
 
     return LinearOperator(factor.shape, matvec=action)
