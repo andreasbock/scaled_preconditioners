@@ -12,7 +12,7 @@ preconditioners defined in this package.
 
 ## Installation
 
-``pip install bregman_approx``
+``pip install scaled_preconditioners``
 
 ## A simple example
 
