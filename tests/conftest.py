@@ -45,12 +45,12 @@ def sparse_pd_matrix(dense_pd_matrix):
 
 @pytest.fixture(scope="module")
 def dense_factor(dense_pd_matrix):
-    return Factor(matrix=dense_pd_matrix)
+    return Factor(m=dense_pd_matrix)
 
 
 @pytest.fixture(scope="module")
 def sparse_factor(sparse_pd_matrix):
-    return Factor(matrix=sparse_pd_matrix)
+    return Factor(m=sparse_pd_matrix)
 
 
 # ------- Symmetric positive semi-definite matrices/factors

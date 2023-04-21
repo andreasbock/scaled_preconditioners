@@ -19,30 +19,30 @@ class Factor(LinearOperator):
     This subclasses LinearOperator to provide an interface which along with the
     usual actions:
 
-        x -> L x,
-        x-> L.T x,
+        x -> m x,
+        x-> m.T x,
 
     allows provides:
 
-        x -> L^{-1} x,
-        x -> L^{-T} x.
+        x -> m^{-1} x,
+        x -> m^{-T} x.
 
     The inverse action is computed using the `solve` argument (or the default).
 
     Attributes:
-        matrix: A boolean indicating if we like SPAM or not.
+        m: LinearOperator or matrix that defines the Factor.
         solve: A method for solving Lx = b.
     """
     def __init__(
         self,
-        matrix: Union[np.ndarray, SparseMatrix, LinearOperator],
+        m: Union[np.ndarray, SparseMatrix, LinearOperator],
         solve=None,
     ):
-        super().__init__(matrix.dtype, matrix.shape)
-        self.linear_operator = aslinearoperator(matrix)
-        self.matrix = matrix
-        self.shape = self.matrix.shape
-        self.is_sparse = scipy.sparse.issparse(matrix)
+        super().__init__(m.dtype, m.shape)
+        self.linear_operator = aslinearoperator(m)
+        self.m = m
+        self.shape = self.m.shape
+        self.is_sparse = scipy.sparse.issparse(m)
 
         if solve is not None:
             self._solve = solve
@@ -66,10 +66,10 @@ class Factor(LinearOperator):
         )
 
     def solve(self, x):
-        return self._solve(self.matrix, x)
+        return self._solve(self.m, x)
 
     def rsolve(self, x):
-        return self._solve(self.matrix.T, x)
+        return self._solve(self.m.T, x)
 
     def _matvec(self, x):
         return self.linear_operator.matvec(x)

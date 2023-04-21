@@ -11,7 +11,7 @@ from tests.conftest import matrices, spsd_linops
 def test_factor(dimension):
     X = np.random.rand(dimension, dimension).astype(np.float64)
 
-    f = Factor(matrix=X)
+    f = Factor(m=X)
     vec = np.random.rand(dimension)
 
     # test left actions
