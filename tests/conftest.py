@@ -1,6 +1,9 @@
 import numpy as np
 import pytest
 from scipy.sparse import csr_matrix
+from scipy.sparse.linalg import aslinearoperator
+
+from scaled_preconditioners.approximation import Factor
 
 
 @pytest.fixture(scope="module")
@@ -28,32 +31,53 @@ def random_state() -> int:
     return 1
 
 
+# ------- Positive definite matrices/factors
+
 @pytest.fixture(scope="module")
-def dense_matrix(dimension, psd_rank):
+def dense_pd_matrix(dimension):
+    return np.random.rand(dimension, dimension).astype(np.float64)
+
+
+@pytest.fixture(scope="module")
+def sparse_pd_matrix(dense_pd_matrix):
+    return csr_matrix(dense_pd_matrix)
+
+
+@pytest.fixture(scope="module")
+def dense_factor(dense_pd_matrix):
+    return Factor(matrix=dense_pd_matrix)
+
+
+@pytest.fixture(scope="module")
+def sparse_factor(sparse_pd_matrix):
+    return Factor(matrix=sparse_pd_matrix)
+
+
+# ------- Symmetric positive semi-definite matrices/factors
+
+@pytest.fixture(scope="module")
+def dense_spsd_matrix(dimension, psd_rank):
     m = np.random.rand(dimension, psd_rank).astype(np.float64)
-    return m @ m.T, psd_rank
+    return m @ m.T
 
 
 @pytest.fixture(scope="module")
-def sparse_matrix(dense_matrix):
-    matrix, rank = dense_matrix
-    return csr_matrix(matrix), rank
+def sparse_spsd_matrix(dense_spsd_matrix):
+    return csr_matrix(dense_spsd_matrix)
 
 
 @pytest.fixture(scope="module")
-def dense_problem(dimension, dense_matrix):
-    Q = np.random.rand(dimension, dimension).astype(np.float64)
-    B, _ = dense_matrix
-    return Q, B
+def dense_spsd_linop(dense_spsd_matrix):
+    return aslinearoperator(dense_spsd_matrix)
 
 
 @pytest.fixture(scope="module")
-def sparse_problem(dimension, sparse_matrix):
-    Q = np.random.rand(dimension, dimension)
-    Q = csr_matrix(Q)
-    B, _ = sparse_matrix
-    return Q, B
+def sparse_spsd_linop(sparse_spsd_matrix):
+    return aslinearoperator(sparse_spsd_matrix)
 
 
-matrices = ["dense_matrix", "sparse_matrix"]
-problems = ["dense_problem", "sparse_problem"]
+pd_mats = ["dense_pd_matrix", "sparse_pd_matrix"]
+spsd_mats = ["dense_spsd_matrix", "sparse_spsd_matrix"]
+matrices = pd_mats + spsd_mats
+spsd_linops = ["dense_spsd_linop", "sparse_spsd_linop"]
+factors = ["dense_factor", "sparse_factor"]

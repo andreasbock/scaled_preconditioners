@@ -1,49 +1,47 @@
 import numpy as np
 import scipy.sparse.linalg as linalg
-from scipy.sparse import csc_matrix
+from scipy.sparse import csr_matrix
+from scipy.sparse.linalg import aslinearoperator
 
-from scaled_preconditioners.preconditioner import compute_preconditioner
+from scaled_preconditioners.preconditioner import Factor, compute_preconditioner
 from scaled_preconditioners.utils import ConjugateGradientCounter
 
 # Define some parameters
 dimension = 100
-psd_rank = 50
+spsd_rank = 50
 rank_approx = 8
-oversampling = 3
+oversampling = 2
 power_iters = 1
 
 # Construct S = A + B
-F_np = np.random.rand(dimension, psd_rank)
-B_np = F_np @ F_np.T
-B = csc_matrix(B_np)  # same rank as we approximate
-Q_np = np.random.rand(dimension, dimension)
-Q = csc_matrix(Q_np)
-S = Q @ Q.T + B
-
+m = np.random.rand(dimension, spsd_rank)
+psd = aslinearoperator(csr_matrix(m @ m.T))
+factor = Factor(csr_matrix(np.random.rand(dimension, dimension)))
+S = factor @ factor.T + psd
 
 # Construct S = A + B
 tsvd_pc = compute_preconditioner(
-    Q_np, B_np, algorithm="truncated_svd", rank_approx=rank_approx
+    factor, psd, algorithm="truncated_svd", rank_approx=rank_approx
 )
 rsvd_pc = compute_preconditioner(
-    Q,
-    B,
+    factor,
+    psd,
     algorithm="randomized",
     rank_approx=rank_approx,
     n_oversamples=oversampling,
     n_power_iter=0,
 )
 rsvd_pc_pwr = compute_preconditioner(
-    Q,
-    B,
+    factor,
+    psd,
     algorithm="randomized",
     rank_approx=rank_approx,
     n_oversamples=oversampling,
     n_power_iter=power_iters,
 )
 nys_pc = compute_preconditioner(
-    Q,
-    B,
+    factor,
+    psd,
     algorithm="nystrom",
     rank_approx=rank_approx,
     n_oversamples=0,
