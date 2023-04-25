@@ -4,7 +4,7 @@ This package implements the preconditioners in [1]. A simple use case
 is demonstrated below. See `examples/example_pcg.py` for a demo of all the 
 preconditioners defined in this package.
 
-[1] TODO
+[1] [Bock, Andreas A., Martin S. Andersen. "Preconditioner Design via the Bregman Divergence." arXiv preprint arXiv:2304.12162 (2023).](https://arxiv.org/abs/2304.12162)
 
 ## Build Status
 
