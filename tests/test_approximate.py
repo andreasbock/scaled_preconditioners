@@ -25,12 +25,14 @@ def test_factor(dimension):
     finv = f.inv()
 
     # test inverse left action
-    assert np.allclose(finv.matvec(vec), np.dot(X_inv, vec))
-    assert np.allclose(f.solve(vec), np.dot(X_inv, vec))
+    result = scipy.linalg.solve(X, vec)
+    assert np.allclose(finv.matvec(vec), result)
+    assert np.allclose(f.solve(vec), result)
 
     # test right actions
+    tresult = scipy.linalg.solve(X, vec, transposed=True)
     assert np.allclose(f.rmatvec(vec), np.dot(X.T, vec))
-    assert np.allclose(f.rsolve(vec), np.dot(X_inv.T, vec))
+    assert np.allclose(f.rsolve(vec), tresult)
 
 
 @pytest.mark.parametrize("matrix", matrices)
