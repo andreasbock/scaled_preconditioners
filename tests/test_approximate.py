@@ -21,7 +21,6 @@ def test_factor(dimension):
     assert np.allclose(f.rmatvec(vec), np.dot(X.T, vec))
 
     # same for inverses
-    X_inv = np.linalg.inv(X)
     finv = f.inv()
 
     # test inverse left action
